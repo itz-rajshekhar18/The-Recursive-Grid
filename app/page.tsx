@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 interface Cell {
   value: number;
@@ -8,11 +8,21 @@ interface Cell {
 }
 
 export default function Home() {
+  const [isLoading, setIsLoading] = useState(true);
   const [grid, setGrid] = useState<Cell[][]>([
     [{ value: 0, locked: false }, { value: 0, locked: false }, { value: 0, locked: false }],
     [{ value: 0, locked: false }, { value: 0, locked: false }, { value: 0, locked: false }],
     [{ value: 0, locked: false }, { value: 0, locked: false }, { value: 0, locked: false }]
   ]);
+
+  useEffect(() => {
+    // Simulating the loading delay
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   const resetGrid = () => {
     setGrid([
@@ -24,31 +34,31 @@ export default function Home() {
 
   const handleBoxClick = (row: number, col: number) => {
     setGrid(prevGrid => {
-      // Create a deep copy of the grid
+      // Creating a deep copy of the grid
       const newGrid = prevGrid.map(r => r.map(cell => ({ ...cell })));
       
-      // If the clicked cell is locked, do nothing
+      // Checking If the clicked cell is locked, otherwise doing nothing
       if (newGrid[row][col].locked) {
         return prevGrid;
       }
 
-      // Increment the clicked cell
+      // Incrementing the clicked cell
       newGrid[row][col].value += 1;
 
-      // Check if clicked cell should be locked
+      // Checking if clicked cell should be locked or not
       if (newGrid[row][col].value >= 15) {
         newGrid[row][col].locked = true;
       }
 
-      // Rule A: If divisible by 3, decrement right neighbor
+      // Rule A: If divisible by 3, decrementing right neighbor
       if (newGrid[row][col].value % 3 === 0) {
-        // Check if there's a right neighbor (col < 2)
+        // Checking if there's a right neighbor (col < 2)
         if (col < 2) {
           const rightCell = newGrid[row][col + 1];
-          // Only modify if not locked
+          // Only modifying if not locked
           if (!rightCell.locked) {
             rightCell.value -= 1;
-            // Check if right neighbor should be locked after update
+            // Checking if right neighbor should be locked after update
             if (rightCell.value >= 15) {
               rightCell.locked = true;
             }
@@ -56,15 +66,15 @@ export default function Home() {
         }
       }
 
-      // Rule B: If divisible by 5, increment bottom neighbor by 2
+      // Rule B: If divisible by 5, incrementing bottom neighbor by 2
       if (newGrid[row][col].value % 5 === 0) {
-        // Check if there's a bottom neighbor (row < 2)
+        // Checking if there's a bottom neighbor (row < 2)
         if (row < 2) {
           const bottomCell = newGrid[row + 1][col];
-          // Only modify if not locked
+          // Only modifying if not locked
           if (!bottomCell.locked) {
             bottomCell.value += 2;
-            // Check if bottom neighbor should be locked after update
+            // Checking if bottom neighbor should be locked after update
             if (bottomCell.value >= 15) {
               bottomCell.locked = true;
             }
@@ -92,6 +102,17 @@ export default function Home() {
       color: isEven ? 'black' : 'white'
     };
   };
+
+  if (isLoading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <div className="h-16 w-16 animate-spin rounded-full border-4 border-gray-300 border-t-blue-600"></div>
+          <p className="text-lg font-semibold text-gray-700">Loading Grid...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center gap-8">
