@@ -111,11 +111,3 @@ recursive-grid/
    - Right cell (1,2) decrements to -1
 4. Continue clicking to trigger more ripple effects
 5. Watch cells lock when they reach 15
-
-## License
-
-MIT
-
-## Author
-
-Built as a demonstration of React state management and interactive UI patterns.
