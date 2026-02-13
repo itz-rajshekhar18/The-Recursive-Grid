@@ -2,6 +2,10 @@
 
 An interactive 3x3 grid game built with React, Next.js, and Tailwind CSS featuring dynamic ripple effects and locking mechanics.
 
+## 🚀 Live Demo
+
+[View Live Project](https://the-recursive-grid-tau.vercel.app/)
+
 ## Overview
 
 This project demonstrates a grid-based interactive component where clicking boxes triggers cascading effects based on mathematical rules. Each cell can increment, affect its neighbors, and eventually lock when reaching a threshold.
